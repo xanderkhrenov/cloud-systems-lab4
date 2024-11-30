@@ -19,17 +19,29 @@ jobs:
       - name: Run linter
         run: flake8 .
 
+  test:
+    needs: [ linter ]
+    strategy:
+      matrix:
+        version: [ 3.7, 3.9, 3.12 ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.version }}
+      - name: Set up test library
+        run: pip install -r ./requirements/test.txt
+      - name: Run test
+        run: SECRET_CATCHPHRASE="It's gonna be legendary" pytest ./test/test_hypotenuse.py
 
-
-#  one_job:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: actions/setup-python@v5
-#      - run: pip install flake8
-#      - run: flake8 .
-#      - run: pip install pytest
-#      - run: SECRET_CATCHPHRASE="It's gonna be legendary" pytest ./test/test_hypotenuse.py
-#      - run: |
-#          echo Deploying now...
-#          echo Done!!!
+  deploy:
+    needs: [ test ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deployment
+        run: |
+          echo Deploying now...
+          echo Done!!!
