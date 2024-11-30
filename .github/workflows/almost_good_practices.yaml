@@ -1,0 +1,35 @@
+name: Almost good practices
+on:
+  push:
+    branches:
+      [ 'master' ]
+
+  pull_request:
+    branches:
+      [ 'master' ]
+
+jobs:
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up linter
+        run: pip install flake8
+      - name: Run linter
+        run: flake8 .
+
+
+
+#  one_job:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v4
+#      - uses: actions/setup-python@v5
+#      - run: pip install flake8
+#      - run: flake8 .
+#      - run: pip install pytest
+#      - run: SECRET_CATCHPHRASE="It's gonna be legendary" pytest ./test/test_hypotenuse.py
+#      - run: |
+#          echo Deploying now...
+#          echo Done!!!
