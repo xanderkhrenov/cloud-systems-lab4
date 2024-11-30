@@ -40,7 +40,7 @@ jobs:
       - name: Set up test library
         run: pip install -r $test_requirements
       - name: Run test
-        run: SECRET_CATCHPHRASE=${{secrets.SECRET_CATCHPHRASE}} pytest $tests_path
+        run: SECRET_CATCHPHRASE="${{secrets.SECRET_CATCHPHRASE}}" pytest $tests_path
 
   deploy:
     needs: [ test ]

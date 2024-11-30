@@ -12,7 +12,7 @@ jobs:
       - run: pip install flake8
       - run: flake8 .
       - run: pip install pytest
-      - run: SECRET_CATCHPHRASE="It's gonna be legendary" pytest ./test/test_hypotenuse.py
+      - run: SECRET_CATCHPHRASE="Its gonna be legendary" pytest ./test/test_hypotenuse.py
       - run: |
           echo Deploying now...
           echo Done!!!
