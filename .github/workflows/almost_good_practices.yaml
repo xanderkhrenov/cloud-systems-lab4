@@ -17,7 +17,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up linter
-        run: pip install -r ${{ env.linter_requirements }}
+        run: pip install -r $linter_requirements
       - name: Run linter
         run: flake8 .
 
@@ -36,11 +36,11 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.version }}
+          python-version: ${{matrix.version}}
       - name: Set up test library
-        run: pip install -r ${{ env.test_requirements }}
+        run: pip install -r $test_requirements
       - name: Run test
-        run: SECRET_CATCHPHRASE=${{ secrets.SECRET_CATCHPHRASE }} pytest ${{ env.tests_path }}
+        run: SECRET_CATCHPHRASE=${{secrets.SECRET_CATCHPHRASE}} pytest $tests_path
 
   deploy:
     needs: [ test ]
