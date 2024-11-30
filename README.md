@@ -1,9 +1,3 @@
-# cloud-systems-lab4
-
-[//]: # (<div align="center">)
-
-[//]: # (    <img src="./images/dr-cox.gif" alt="Just hello, buddy!" />)
-
-[//]: # (</div>)
+# Облачные системы и услуги. Лабораторная работа 4.
 
 ![Just hello, buddy!](./images/dr-cox.gif)
