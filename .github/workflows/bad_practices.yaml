@@ -1,0 +1,16 @@
+on:
+  push:
+    branches:
+      '*'
+
+jobs:
+  one_job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - run: pip install pytest
+      - run: SECRET="It's gonna be legendary" pytest ./test/test_hypotenuse.py
+      - run: |
+          echo Deploying now...
+          echo Done!!!
