@@ -4,7 +4,7 @@ from hypotenuse.hypotenuse import hypotenuse
 
 
 def test_secret():
-    assert os.environ['SECRET_CATCHPHRASE'] == "It's gonna be legendary"
+    assert os.environ['SECRET_CATCHPHRASE'] == "Its gonna be legendary"
 
 
 def test_hypotenuse():
