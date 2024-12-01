@@ -30,6 +30,9 @@ jobs:
     env:
       test_requirements: ./requirements/test.txt
       tests_path: ./test/test_hypotenuse.py
+      VAULT_ADDR: ${{secrets.VAULT_ADDR}}
+      VAULT_TOKEN: ${{secrets.VAULT_TOKEN}}
+      CATCHPHRASE: $(vault kv get -field=SECRET_CATCHPHRASE catchphrase/catchphrase)
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,13 +44,6 @@ jobs:
           python-version: ${{matrix.version}}
       - name: Set up test library
         run: pip install -r $test_requirements
-      - name: Get secret from vault
-        env:
-          VAULT_ADDR: ${{secrets.VAULT_ADDR}}
-          VAULT_TOKEN: ${{secrets.VAULT_TOKEN}}
-        run: |
-          export CATCHPHRASE=$(vault kv get -field=SECRET_CATCHPHRASE catchphrase/catchphrase)
-          echo $VAULT_ADDR
       - name: Run test
         run: SECRET_CATCHPHRASE="Its gonna be legendary" pytest $tests_path
       - run: echo $CATCHPHRASE
