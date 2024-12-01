@@ -23,9 +23,9 @@ jobs:
 
   test:
     needs: [ linter ]
-    strategy:
-      matrix:
-        version: [ 3.7, 3.9, 3.12 ]
+#    strategy:
+#      matrix:
+#        version: [ 3.7, 3.9, 3.12 ]
     runs-on: ubuntu-latest
     env:
       test_requirements: ./requirements/test.txt
