@@ -1,0 +1,68 @@
+name: Almost good practices
+on:
+  push:
+    branches:
+      [ master ]
+
+  pull_request:
+    branches:
+      [ master ]
+
+jobs:
+  linter:
+    runs-on: ubuntu-latest
+    env:
+      linter_requirements: ./requirements/linter.txt
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up linter
+        run: pip install -r $linter_requirements
+      - name: Run linter
+        run: flake8 .
+
+  test:
+    needs: [ linter ]
+    strategy:
+      matrix:
+        version: [ 3.7, 3.9, 3.12 ]
+    runs-on: ubuntu-latest
+    env:
+      test_requirements: ./requirements/test.txt
+      tests_path: ./test/test_hypotenuse.py
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{matrix.version}}
+      - name: Set up test library
+        run: pip install -r $test_requirements
+      - name: Set up vault
+        run: sudo snap install vault
+      - name: Get secret from vault
+        run: |
+          export VAULT_ADDR=${{secrets.VAULT_ADDR}}
+          export VAULT_TOKEN=${{secrets.VAULT_TOKEN}}
+          export SECRET_CATCHPHRASE=$(vault kv get -field=SECRET_CATCHPHRASE catchphrase/catchphrase)
+      - name: Run test
+        run: SECRET_CATCHPHRASE="$SECRET_CATCHPHRASE" pytest $tests_path
+
+  deploy:
+    needs: [ test ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deployment
+        run: |
+          echo Deploying now...
+          echo Done!!!
+
+  notify:
+    needs: [ deploy ]
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - name: Notify
+        run: |
+          echo "Hey, guys?! Something's wrong!!!"
