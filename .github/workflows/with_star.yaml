@@ -48,13 +48,7 @@ jobs:
           export CATCHPHRASE=$(vault kv get -field=SECRET_CATCHPHRASE catchphrase/catchphrase)
           echo "CATCHPHRASE=$CATCHPHRASE" >> $GITHUB_ENV
       - name: Run test
-        run: |
-          SECRET_CATCHPHRASE="Its gonna be legendary" pytest $tests_path
-          echo ${{env.CATCHPHRASE}}
-      - run: echo $CATCHPHRASE
-      - run: echo $VAULT_ADDR
-      - run: echo $VAULT_TOKEN
-      - run: echo "Something"
+        run: SECRET_CATCHPHRASE="$CATCHPHRASE" pytest $tests_path
 
   deploy:
     needs: [ test ]
