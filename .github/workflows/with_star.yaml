@@ -23,9 +23,9 @@ jobs:
 
   test:
     needs: [ linter ]
-#    strategy:
-#      matrix:
-#        version: [ 3.7, 3.9, 3.12 ]
+    strategy:
+      matrix:
+        version: [ 3.7, 3.9, 3.12 ]
     runs-on: ubuntu-latest
     env:
       test_requirements: ./requirements/test.txt
@@ -38,25 +38,20 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.9
+          python-version: ${{matrix.version}}
       - name: Set up test library
         run: pip install -r $test_requirements
       - name: Get secret from vault
-        run: |
-          export VAULT_ADDR=${{secrets.VAULT_ADDR}}
-          export VAULT_TOKEN=${{secrets.VAULT_TOKEN}}
-          export CATCHPHRASE=$(vault kv get -field=SECRET_CATCHPHRASE catchphrase/catchphrase)
+        env:
+          VAULT_ADDR: ${{secrets.VAULT_ADDR}}
+          VAULT_TOKEN: ${{secrets.VAULT_TOKEN}}
+        run: export CATCHPHRASE=$(vault kv get -field=SECRET_CATCHPHRASE catchphrase/catchphrase)
       - name: Run test
-        run: |
-          SECRET_CATCHPHRASE="Its gonna be legendary" pytest $tests_path
-      - run:
-          echo $CATCHPHRASE
-      - run:
-          echo $VAULT_ADDR
-      - run:
-          echo $VAULT_TOKEN
-      - run:
-          echo "Something"
+        run: SECRET_CATCHPHRASE="Its gonna be legendary" pytest $tests_path
+      - run: echo $CATCHPHRASE
+      - run: echo $VAULT_ADDR
+      - run: echo $VAULT_TOKEN
+      - run: echo "Something"
 
   deploy:
     needs: [ test ]
