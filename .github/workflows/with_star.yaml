@@ -44,7 +44,9 @@ jobs:
       - name: Set up test library
         run: pip install -r $test_requirements
       - name: Get secret from vault
-        run: export CATCHPHRASE=$(vault kv get -field=SECRET_CATCHPHRASE catchphrase/catchphrase)
+        run: |
+          export CATCHPHRASE=$(vault kv get -field=SECRET_CATCHPHRASE catchphrase/catchphrase)
+          echo $CATCHPHRASE
       - name: Run test
         run: SECRET_CATCHPHRASE="Its gonna be legendary" pytest $tests_path
       - run: echo $CATCHPHRASE
