@@ -33,21 +33,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Set up vault
+        run: sudo snap install vault
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{matrix.version}}
       - name: Set up test library
         run: pip install -r $test_requirements
-      - name: Set up vault
-        run: sudo snap install vault
       - name: Get secret from vault
         run: |
           export VAULT_ADDR=${{secrets.VAULT_ADDR}}
           export VAULT_TOKEN=${{secrets.VAULT_TOKEN}}
           export SECRET_CATCHPHRASE=$(vault kv get -field=SECRET_CATCHPHRASE catchphrase/catchphrase)
       - name: Run test
-        run: SECRET_CATCHPHRASE="$SECRET_CATCHPHRASE" pytest $tests_path
+        run: |
+          SECRET_CATCHPHRASE="Its gonna be legendary" pytest $tests_path
+          echo $SECRET_CATCHPHRASE
+          echo $VAULT_ADDR
+          echo $VAULT_TOKEN
 
   deploy:
     needs: [ test ]
