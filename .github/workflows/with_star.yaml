@@ -1,4 +1,4 @@
-name: Almost good practices
+name: With star
 on:
   push:
     branches:
@@ -45,12 +45,15 @@ jobs:
         run: |
           export VAULT_ADDR=${{secrets.VAULT_ADDR}}
           export VAULT_TOKEN=${{secrets.VAULT_TOKEN}}
-          export SECRET_CATCHPHRASE=$(vault kv get -field=SECRET_CATCHPHRASE catchphrase/catchphrase)
+          export CATCHPHRASE=$(vault kv get -field=SECRET_CATCHPHRASE catchphrase/catchphrase)
       - name: Run test
         run: |
           SECRET_CATCHPHRASE="Its gonna be legendary" pytest $tests_path
-          echo $SECRET_CATCHPHRASE
+      - run:
+          echo $CATCHPHRASE
+      - run:
           echo $VAULT_ADDR
+      - run:
           echo $VAULT_TOKEN
 
   deploy:
