@@ -55,6 +55,8 @@ jobs:
           echo $VAULT_ADDR
       - run:
           echo $VAULT_TOKEN
+      - run:
+          echo "Something"
 
   deploy:
     needs: [ test ]
